@@ -27,9 +27,28 @@ variable "multi_master_cluster_is_initialized_ssm_name" {
   nullable    = false
 }
 
+variable "vpc_id" {
+  description = "The VPC id."
+  type        = string
+  nullable    = false
+}
+
+variable "cluster_subnets" {
+  description = "The list of subnet ids in which cluster will be deployed."
+  type        = list(string)
+  nullable    = false
+}
+
+variable "master_lb_subnets" {
+  description = "The list of public subnet ids for Control Plane network LB."
+  type        = list(string)
+  nullable    = false
+}
+
 variable "master_node_type" {
   description = "The ec2 instance type for K8S master nodes"
   type        = string
+  default     = "t3.medium"
   nullable    = false
 }
 
@@ -57,30 +76,10 @@ variable "master_additional_sg" {
   default     = []
 }
 
-variable "cluster_subnets" {
-  description = "The list of subnet ids in which cluster will be deployed."
-  type        = list(string)
-  nullable    = false
-  #module.vpc.private_subnets
-}
-
-variable "master_lb_subnets" {
-  description = "The list of public subnet ids for Control Plane network LB."
-  type        = list(string)
-  nullable    = false
-  #module.vpc.public_subnets
-}
-
-variable "vpc_id" {
-  description = "The VPC id."
-  type        = string
-  nullable    = false
-  #module.vpc.vpc_id
-}
-
 variable "slave_node_type" {
   description = "The ec2 instance type for K8S slave nodes"
   type        = string
+  default     = "t3.small"
   nullable    = false
 }
 
@@ -108,7 +107,7 @@ variable "slave_additional_sg" {
   default     = []
 }
 
-variable "k8s_version" { #import from preparatory
+variable "k8s_version" {
   description = "Kubernetes cluster version. Example: '1.26.1' (if not work, try 1.26.1-00)"
   type        = string
   nullable    = false
