@@ -131,10 +131,10 @@ variable "calico_version" {
   default     = "v3.25.0"
 }
 
-variable "config_local_path" { #mb somehow to path.root, or path.cwd as last resort
-  description = "Local path where kubeconifg will be located."
+variable "kubeconfig_file_name" {
+  description = "The file name of kubeconfig which will be located at $path.root/$var.kubeconfig_file_name. Can set a path, e.g.: 'cluster-kubeconifg/conifg'"
   type        = string
-  default     = "./config"
+  default     = "config"
 }
 
 variable "tags" {

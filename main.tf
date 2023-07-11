@@ -88,7 +88,7 @@ data "aws_iam_policy_document" "master" {
 }
 resource "aws_iam_policy" "master" {
   for_each = local.master_policies
-  name     = "${each.key}-${var.name_suffix}"
+  name     = "${each.key}-master-${var.name_suffix}"
   path     = "/"
   policy   = data.aws_iam_policy_document.master[each.key].json
   tags = merge(
@@ -170,7 +170,7 @@ data "aws_iam_policy_document" "slave" {
 }
 resource "aws_iam_policy" "slave" {
   for_each = local.slave_policies
-  name     = "${each.key}-${var.name_suffix}"
+  name     = "${each.key}-slave-${var.name_suffix}"
   path     = "/"
   policy   = data.aws_iam_policy_document.slave[each.key].json
   tags = merge(
@@ -689,7 +689,7 @@ data "aws_secretsmanager_secret_version" "cluster_config" {
 
 resource "local_sensitive_file" "cluster_config" {
   content  = data.aws_secretsmanager_secret_version.cluster_config.secret_string
-  filename = var.config_local_path
+  filename = "${path.root}/${var.kubeconfig_file_name}"
 }
 
 resource "null_resource" "cluster_delete_post_action" {
