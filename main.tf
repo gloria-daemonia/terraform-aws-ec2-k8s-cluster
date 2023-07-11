@@ -3,6 +3,11 @@ locals {
   slave_join_command_key  = "slave_join_command"
 }
 
+data "aws_subnet" "cluster_subnets_cidr" {
+  for_each = toset(var.cluster_subnets)
+  id       = var.cluster_subnets[each.value]
+}
+
 #IAM
 data "aws_iam_policy_document" "assume_role_ec2" {
   statement {
@@ -369,11 +374,6 @@ resource "aws_cloudwatch_log_group" "master" {
     { "Description" = "Log group with cloud init logs" },
     var.tags
   )
-}
-
-data "aws_subnet" "cluster_subnets_cidr" {
-  for_each = var.cluster_subnets
-  id       = var.cluster_subnets[each.key]
 }
 
 resource "aws_security_group" "master" {
