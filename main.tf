@@ -371,6 +371,11 @@ resource "aws_cloudwatch_log_group" "master" {
   )
 }
 
+data "aws_subnet" "cluster_subnets_cidr" {
+  for_each = var.cluster_subnets
+  id       = var.cluster_subnets[each.key]
+}
+
 resource "aws_security_group" "master" {
   name        = "K8S-master-sg-${var.name_suffix}"
   description = "K8S master security group"
@@ -393,7 +398,7 @@ resource "aws_security_group" "master" {
   }
   ingress {
     description = "Allow traffic from local network"
-    cidr_blocks = var.cluster_subnets # ["10.0.0.0/8", "172.16.0.0/16", "192.168.0.0/16"]
+    cidr_blocks = data.aws_subnet.cluster_subnets_cidr # ["10.0.0.0/8", "172.16.0.0/16", "192.168.0.0/16"]
     protocol    = "-1"
     from_port   = 0
     to_port     = 0
@@ -556,7 +561,7 @@ resource "aws_security_group" "slave" {
   }
   ingress {
     description = "Allow traffic from local network"
-    cidr_blocks = var.cluster_subnets # ["10.0.0.0/8", "172.16.0.0/16", "192.168.0.0/16"]
+    cidr_blocks = data.aws_subnet.cluster_subnets_cidr # ["10.0.0.0/8", "172.16.0.0/16", "192.168.0.0/16"]
     protocol    = "-1"
     from_port   = 0
     to_port     = 0
