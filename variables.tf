@@ -70,7 +70,7 @@ variable "master_asg_desired_capacity" {
   default     = 1
 }
 
-variable "master_additional_sg" {
+variable "master_additional_sg_ids" {
   description = "List of additional SG ids to apply on K8S masters"
   type        = list(string)
   default     = []
@@ -101,7 +101,7 @@ variable "slave_asg_desired_capacity" {
   default     = 1
 }
 
-variable "slave_additional_sg" {
+variable "slave_additional_sg_ids" {
   description = "List of additional SG ids to apply on K8S slaves"
   type        = list(string)
   default     = []

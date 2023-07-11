@@ -398,7 +398,7 @@ resource "aws_security_group" "master" {
   }
   ingress {
     description = "Allow traffic from local network"
-    cidr_blocks = data.aws_subnet.cluster_subnets_cidr # ["10.0.0.0/8", "172.16.0.0/16", "192.168.0.0/16"]
+    cidr_blocks = values(data.aws_subnet.cluster_subnets_cidr)[*].cidr_block # ["10.0.0.0/8", "172.16.0.0/16", "192.168.0.0/16"]
     protocol    = "-1"
     from_port   = 0
     to_port     = 0
@@ -456,8 +456,8 @@ resource "aws_launch_template" "master" {
 
   network_interfaces {
     security_groups = concat(
-      [aws_security_group.master],
-      var.master_additional_sg
+      [aws_security_group.master.id],
+      var.master_additional_sg_ids
     )
   }
 
@@ -561,7 +561,7 @@ resource "aws_security_group" "slave" {
   }
   ingress {
     description = "Allow traffic from local network"
-    cidr_blocks = data.aws_subnet.cluster_subnets_cidr # ["10.0.0.0/8", "172.16.0.0/16", "192.168.0.0/16"]
+    cidr_blocks = values(data.aws_subnet.cluster_subnets_cidr)[*].cidr_block # ["10.0.0.0/8", "172.16.0.0/16", "192.168.0.0/16"]
     protocol    = "-1"
     from_port   = 0
     to_port     = 0
@@ -611,8 +611,8 @@ resource "aws_launch_template" "slave" {
 
   network_interfaces {
     security_groups = concat(
-      [aws_security_group.slave],
-      var.slave_additional_sg
+      [aws_security_group.slave.id],
+      var.slave_additional_sg_ids
     )
   }
 
