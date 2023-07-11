@@ -5,7 +5,7 @@ locals {
 
 data "aws_subnet" "cluster_subnets_cidr" {
   for_each = toset(var.cluster_subnets)
-  id       = var.cluster_subnets[each.value]
+  id       = each.key
 }
 
 #IAM
